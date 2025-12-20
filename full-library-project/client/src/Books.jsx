@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import AddBook from "./AddBook";
 import EditBook from "./EditBook";
 import DeleteBook from "./DeleteBook";
@@ -10,16 +11,27 @@ export default function Books() {
     const [loading, setLoading] = useState(true);
     const [pageError, setPageError] = useState(null);
     const [editingId, setEditingId] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         async function loadBooks() {
             setPageError(null);
             try {
-                const res = await fetch(`${API_BASE}/api/books`);
+                const token = localStorage.getItem("token");
+                if (!token) {
+                    throw new Error("בעיה בחיבור – התחברי מחדש");
+                }
+
+                const res = await fetch("http://localhost:3000/api/books", {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
                 const data = await res.json();
 
                 if (!res.ok) {
-                    throw new Error(data?.error || "שגיאה בטעינת הספרים");
+                    throw new Error(data?.error || "שגיאה בטעינת ספרים");
                 }
 
                 setBooks(data);
@@ -48,6 +60,11 @@ export default function Books() {
     function handleBookDeleted(deletedId) {
         setBooks((prev) => prev.filter((b) => b._id !== deletedId));
         if (editingId === deletedId) setEditingId(null);
+    }
+
+    function handleLogout() {
+        localStorage.removeItem("token");
+        navigate("/login");
     }
 
     if (loading) return <p>טוען ספרים...</p>;
@@ -92,6 +109,10 @@ export default function Books() {
                     onCancel={() => setEditingId(null)}
                 />
             )}
+
+            <button onClick={handleLogout}>
+                התנתקות
+            </button>
         </div>
     );
 }
