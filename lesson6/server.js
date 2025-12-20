@@ -1,5 +1,8 @@
 import express from "express";
 import Book from "./models/book.js";
+import { connectDB } from "./db.js";
+
+connectDB();
 
 const app = express();
 
