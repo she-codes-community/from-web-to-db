@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { authHeaders } from "./authHeaders";
 
 export default function DeleteBook({ bookId, onDeleted, onError, apiBase }) {
     const [deleting, setDeleting] = useState(false);
@@ -11,6 +12,7 @@ export default function DeleteBook({ bookId, onDeleted, onError, apiBase }) {
         try {
             const res = await fetch(`${apiBase}/api/books/${bookId}`, {
                 method: "DELETE",
+                headers: authHeaders(),
             });
 
             // אם 204 אין מה לקרוא

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import AddBook from "./AddBook";
 import EditBook from "./EditBook";
 import DeleteBook from "./DeleteBook";
+import { authHeaders } from "./authHeaders";
 
 const API_BASE = "http://localhost:3000";
 
@@ -23,9 +24,7 @@ export default function Books() {
                 }
 
                 const res = await fetch("http://localhost:3000/api/books", {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
+                    headers: authHeaders(),
                 });
 
                 const data = await res.json();

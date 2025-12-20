@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { authHeaders } from "./authHeaders";
 
 export default function AddBook({ onBookAdded }) {
     const [title, setTitle] = useState("");
@@ -15,7 +16,7 @@ export default function AddBook({ onBookAdded }) {
         try {
             const res = await fetch("http://localhost:3000/api/books", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: authHeaders({ "Content-Type": "application/json" }),
                 body: JSON.stringify({
                     title,
                     author,

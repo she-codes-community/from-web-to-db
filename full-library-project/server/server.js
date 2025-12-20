@@ -3,7 +3,7 @@ import cors from "cors";
 import { connectDB } from "./db.js";
 import Book from "./models/book.js";
 import User from "./models/user.js";
-import { hashPassword, comparePassword, auth, createToken } from "./auth.js";
+import { hashPassword, comparePassword, auth, createToken, requireRoles } from "./auth.js";
 
 connectDB();
 
@@ -24,7 +24,7 @@ app.get("/api/books", auth, async (req, res) => {
 });
 
 
-app.get("/api/books/:id", auth, async (req, res) => {
+app.get("/api/books/:id", auth, requireRoles(["reader", "librarian"]), async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -40,7 +40,7 @@ app.get("/api/books/:id", auth, async (req, res) => {
 });
 
 
-app.post("/api/books", auth, async (req, res) => {
+app.post("/api/books", auth, requireRoles("librarian"), async (req, res) => {
     try {
         const { title, author, year } = req.body;
 
@@ -61,7 +61,7 @@ app.post("/api/books", auth, async (req, res) => {
     }
 });
 
-app.put("/api/books/:id", auth, async (req, res) => {
+app.put("/api/books/:id", auth, requireRoles("librarian"), async (req, res) => {
     try {
         const updatedBook = await Book.findByIdAndUpdate(
             req.params.id,
@@ -79,7 +79,7 @@ app.put("/api/books/:id", auth, async (req, res) => {
     }
 });
 
-app.delete("/api/books/:id", auth, async (req, res) => {
+app.delete("/api/books/:id", auth, requireRoles("librarian"), async (req, res) => {
     const { id } = req.params;
 
     try {
