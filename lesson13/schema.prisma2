@@ -1,0 +1,11 @@
+model Student {
+  id      Int      @id @default(autoincrement())
+  name    String
+  courses Course[]
+}
+
+model Course {
+  id        Int        @id @default(autoincrement())
+  title     String
+  students  Student[]
+}

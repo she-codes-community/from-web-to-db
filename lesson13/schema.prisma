@@ -1,0 +1,10 @@
+model Borrow {
+id          Int      @id @default(autoincrement())
+userId      Int
+bookId      Int
+borrowedAt  DateTime @default(now())
+returnedAt  DateTime?
+
+user User @relation(fields: [userId], references: [id])
+book Book @relation(fields: [bookId], references: [id])
+}
