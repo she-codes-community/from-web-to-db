@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import User from "./models/user.js";
+import User from "./mongomodels/user.js";
 
 export async function auth(req, res, next) {
     const header = req.headers.authorization;
