@@ -32,7 +32,7 @@ export default function EditBook({ book, onSave, onCancel, apiBase }) {
 
         setSaving(true);
         try {
-            const res = await fetch(`${apiBase}/api/books/${book._id}`, {
+            const res = await fetch(`${apiBase}/api/books/${book.id}`, {
                 method: "PUT",
                 headers: authHeaders({ "Content-Type": "application/json" }),
                 body: JSON.stringify(payload),

@@ -51,13 +51,13 @@ export default function Books() {
 
     function handleBookSaved(updatedBook) {
         setBooks((prev) =>
-            prev.map((b) => (b._id === updatedBook._id ? updatedBook : b))
+            prev.map((b) => (b.id === updatedBook.id ? updatedBook : b))
         );
         setEditingId(null);
     }
 
     function handleBookDeleted(deletedId) {
-        setBooks((prev) => prev.filter((b) => b._id !== deletedId));
+        setBooks((prev) => prev.filter((b) => b.id !== deletedId));
         if (editingId === deletedId) setEditingId(null);
     }
 
@@ -69,7 +69,7 @@ export default function Books() {
     if (loading) return <p>טוען ספרים...</p>;
     if (pageError) return <p>{pageError}</p>;
 
-    const editingBook = books.find((b) => b._id === editingId) || null;
+    const editingBook = books.find((b) => b.id === editingId) || null;
 
     return (
         <div>
@@ -78,20 +78,20 @@ export default function Books() {
 
             <ul>
                 {books.map((b) => (
-                    <li key={b._id}>
+                    <li key={b.id}>
                         <strong>{b.title}</strong>
                         {b.author && <> – {b.author}</>}
                         {b.year && <> ({b.year})</>}
                         {b.rating != null && <> | rating: {b.rating}</>}
 
-                        <button type="button" onClick={() => setEditingId(b._id)}>
+                        <button type="button" onClick={() => setEditingId(b.id)}>
                             ערכי
                         </button>
 
                         <DeleteBook
-                            bookId={b._id}
+                            bookId={b.id}
                             apiBase={API_BASE}
-                            onDeleted={() => handleBookDeleted(b._id)}
+                            onDeleted={() => handleBookDeleted(b.id)}
                             onError={(msg) => setPageError(msg)}
                         />
                     </li>
@@ -101,7 +101,7 @@ export default function Books() {
             {/* עריכה */}
             {editingBook && (
                 <EditBook
-                    key={editingBook._id}
+                    key={editingBook.id}
                     book={editingBook}
                     apiBase={API_BASE}
                     onSave={handleBookSaved}

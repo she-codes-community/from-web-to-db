@@ -8,7 +8,7 @@ const bookSchema = new mongoose.Schema({
     author: String,
     year: {
         type: Number,
-        min: [1990, "Year must be positive"]
+        min: [1990, "Year must be greater than 1990"]
     }
 });
 
