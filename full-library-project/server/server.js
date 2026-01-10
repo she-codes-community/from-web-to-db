@@ -15,7 +15,7 @@ app.use(mongoResponseIdMiddleware); //Mongo specific middleware
 // import { prisma, toPrismaId } from "./prisma.js";
 
 /******************** General Middleware ********************/
-app.use(cors({ origin: "http://localhost:5175" }));
+app.use(cors({ origin: "http://localhost:5173" }));
 app.use(express.json());
 
 /******************** Server ********************/
