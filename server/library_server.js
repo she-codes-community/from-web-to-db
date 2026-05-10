@@ -20,6 +20,16 @@ app.get("/api/books/:id", (req, res) => {
     res.json(book);
 });
 
+app.post("/api/books", (req, res) => {
+    const newBook = {
+        id: Date.now(),
+        ...req.body
+    };
+
+    books.push(newBook);
+    res.status(201).json(newBook);
+});
+
 app.listen(3000, () => {
     console.log("Server running on http://localhost:3000");
 });
