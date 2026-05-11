@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "library_server.js",
+  "type": "module",
   "dependencies": {
     "express": "^5.2.1"
   },
