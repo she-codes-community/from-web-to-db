@@ -17,3 +17,17 @@ export async function connectDB() {
         console.error("MongoDB error:", err);
     }
 }
+
+export function normalizeMongoId(entity) {
+    if (!entity) return null;
+
+    const _id = entity._id;
+    const id = _id?.toString?.() ?? _id;
+
+    // Convert document to object
+    const base = entity.toObject ? entity.toObject() : entity;
+
+    // return object with id instead of _id
+    const { _id: removed, ...rest } = base;
+    return { id, ...rest };
+}

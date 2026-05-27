@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import EditBook from "./EditBook";
+import AddBook from "./AddBook";
+import { authHeaders } from "./authHeaders";
 
 export default function Books() {
     const [books, setBooks] = useState([]);
@@ -7,12 +10,16 @@ export default function Books() {
     const [error, setError] = useState(null);
     const [editing, setEditing] = useState(null);
 
+    const navigate = useNavigate();
+
     useEffect(() => {
         async function loadBooks() {
             try {
                 setError(null);
 
-                const res = await fetch("http://localhost:3000/api/books");
+                const res = await fetch("http://localhost:3000/api/books", {
+                    headers: authHeaders(),
+                });
                 if (!res.ok) {
                     throw new Error("Server error: " + res.status);
                 }
@@ -36,24 +43,31 @@ export default function Books() {
         setEditing(null);
     }
 
+    function handleLogout() {
+        localStorage.removeItem("token");
+        navigate("/login");
+    }
+
     if (loading) return <p>טוען ספרים...</p>;
     if (error) return <p style={{ color: "red" }}>{error}</p>;
 
     return (
-    <div>
-      <ul>
-        {books.map(b => (
-          <li key={b._id}>
-            {b.title} (rating: {b.rating ?? "-"})
-            <button onClick={() => setEditing(b)}>ערכי</button>
-          </li>
-        ))}
-      </ul>
+        <div>
+            <AddBook />
+            <ul>
+                {books.map(b => (
+                    <li key={b._id}>
+                        {b.title} (rating: {b.rating ?? "-"})
+                        <button onClick={() => setEditing(b)}>ערכי</button>
+                    </li>
+                ))}
+            </ul>
 
-      {editing && (
-        <EditBook book={editing} onSave={handleSave} />
-      )}
-    </div>
-  );
+            {editing && (
+                <EditBook book={editing} onSave={handleSave} />
+            )}
+
+            <button onClick={handleLogout}>התנתקות</button>
+        </div>
+    );
 }
-
