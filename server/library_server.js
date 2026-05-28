@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 
-import { hashPassword, comparePassword, auth, createToken, requireRoles, validateEmailAndPassword } from "./auth.js";
+import { hashPassword, comparePassword, auth, createToken, validateEmailAndPassword } from "./auth.js";
 
 /******************** For Mongoose ********************/
 import Book from "./mongomodels/book.js";
@@ -55,7 +55,7 @@ app.put("/api/books/:id", async (req, res) => {
     }
 });
 
-app.delete("/api/books/:id", auth, requireRoles("librarian"), async (req, res) => {
+app.delete("/api/books/:id", auth, async (req, res) => {
     const { id } = req.params;
 
     try {

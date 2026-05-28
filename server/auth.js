@@ -65,23 +65,6 @@ export async function auth(req, res, next) {
     }
 }
 
-// Authorization middleware
-export function requireRoles(requiredRoles) {
-    const roles = Array.isArray(requiredRoles) ? requiredRoles : [requiredRoles];
-
-    return function (req, res, next) {
-        if (!req.userRole) {
-            return res.status(401).json({ error: "Unauthorized" });
-        }
-
-        if (!roles.includes(req.userRole)) {
-            return res.status(403).json({ error: "Forbidden" });
-        }
-
-        next();
-    };
-}
-
 export function validateEmailAndPassword(body) {
     let { email, password } = body;
 
