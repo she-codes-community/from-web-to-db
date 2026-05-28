@@ -2,7 +2,6 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 import User from "./mongomodels/user.js";
-import { normalizeMongoId } from "./mongodb.js";
 
 /******************** bcrypt password hashing functions ********************/
 export async function hashPassword(password) {
@@ -17,53 +16,52 @@ export async function comparePassword(password, hashedPassword) {
 }
 
 /******************** Token related middleware and functions ********************/
-const JWT_SECRET = "library-secret";
-
 export function createToken(user) {
     return jwt.sign(
         { userId: user.id, email: user.email, role: user.role },
-        JWT_SECRET,
+        process.env.JWT_SECRET,
         { expiresIn: "1h" }
     );
 }
 
 // Authentication middleware
 export async function auth(req, res, next) {
-    // Getting the authorization header from the request
     const header = req.headers.authorization;
+    if (!header) return res.status(401).json({ error: "Missing Authorization header" });
 
-    // Return 401 if there is no header
-    if (!header) {
-        return res.status(401).json({error: "Missing Authorization header"});
-    }
-
-    // Return 401 if there is no "Bearer <token>" in the header
     const [, token] = header.split(" ");
-    if (!token) {
-        return res.status(401).json({error: "Missing Bearer <token>"});
-    }
+    if (!token) return res.status(401).json({ error: "Missing token" });
 
     try {
-        //Verify the token is correct using jwt and the secret
-        const decoded = jwt.verify(token, JWT_SECRET);
-        const rawUserId = decoded.userId;
-
-        // Mongoose -->
-        const mongoUser = await User.findById(rawUserId);
-        const user = normalizeMongoId(mongoUser);
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await User.findById(decoded.userId);
 
         if (!user) return res.status(401).json({ error: "User not found" });
 
-        //Save the userId in the request and continue
-        req.userId = user.id;
+        req.userId = user._id;
         req.userRole = user.role;
-        next();
 
+        next();
     } catch (err) {
-        console.error("AUTH ERROR:", err);
-        return res.status(401).json({ error: err.message });
+        return res.status(401).json({ error: "Invalid or expired token" });
     }
 }
+
+// Authorization middleware
+export function requireRole(role) {
+    return function (req, res, next) {
+        if (!req.userRole) {
+            return res.status(401).json({ error: "User role missing" });
+        }
+
+        if (req.userRole !== role) {
+            return res.status(403).json({ error: "Forbidden – insufficient permissions" });
+        }
+
+        next();
+    };
+}
+
 
 export function validateEmailAndPassword(body) {
     let { email, password } = body;

@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 
-import { hashPassword, comparePassword, auth, createToken, validateEmailAndPassword } from "./auth.js";
+import { hashPassword, comparePassword, auth, createToken, requireRole, validateEmailAndPassword } from "./auth.js";
 
 /******************** For Mongoose ********************/
 import Book from "./mongomodels/book.js";
@@ -55,7 +55,7 @@ app.put("/api/books/:id", async (req, res) => {
     }
 });
 
-app.delete("/api/books/:id", auth, async (req, res) => {
+app.delete("/api/books/:id", auth, requireRole("librarian"), async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -68,11 +68,6 @@ app.delete("/api/books/:id", auth, async (req, res) => {
         console.error("DELETE /api/books/:id", err);
         return res.status(500).json({ error: "Failed to delete book" });
     }
-});
-
-/******************** Server ********************/
-app.listen(3000, () => {
-    console.log("Server running on http://localhost:3000");
 });
 
 /******************** Auth Routes ********************/
@@ -141,5 +136,10 @@ app.post("/api/users/login", async (req, res) => {
         console.error("POST /api/users/login", err);
         return res.status(500).json({ error: "Failed to login" });
     }
+});
+
+/******************** Server ********************/
+app.listen(3000, () => {
+    console.log("Server running on http://localhost:3000");
 });
 
