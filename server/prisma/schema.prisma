@@ -14,6 +14,8 @@ model Book {
   title  String
   author String?
   year   Int?
+
+  borrows Borrow[]
 }
 
 model User {
@@ -22,6 +24,19 @@ model User {
   password String
   isActive Boolean @default(true)
   role     String  @default("reader")
+
+  borrows Borrow[]
+}
+
+model Borrow {
+  id         Int       @id @default(autoincrement())
+  userId     Int
+  bookId     Int
+  borrowedAt DateTime  @default(now())
+  returnedAt DateTime?
+
+  user User @relation(fields: [userId], references: [id])
+  book Book @relation(fields: [bookId], references: [id])
 }
 
 model Event {
