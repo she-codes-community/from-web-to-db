@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { authHeaders } from "./authHeaders";
 
 export default function EditBook({ book, onSave }) {
     const [title, setTitle] = useState(book.title);
@@ -17,7 +18,7 @@ export default function EditBook({ book, onSave }) {
 
         const res = await fetch(`http://localhost:3000/api/books/${book._id}`, {
             method: "PUT",
-            headers: { "Content-Type": "application/json" },
+            headers: { ...authHeaders(), "Content-Type": "application/json" },
             body: JSON.stringify({ title, rating }),
         });
 
