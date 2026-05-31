@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import AddBook from "./AddBook";
 import EditBook from "./EditBook";
 
 export default function Books() {
@@ -41,6 +42,7 @@ export default function Books() {
 
     return (
     <div>
+      <AddBook onBookAdded={(book) => setBooks((prev) => [book, ...prev])} />
       <ul>
         {books.map(b => (
           <li key={b._id}>
