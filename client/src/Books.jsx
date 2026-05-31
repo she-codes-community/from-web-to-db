@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import EditBook from "./EditBook";
 import AddBook from "./AddBook";
+import EditBook from "./EditBook";
 import { authHeaders } from "./authHeaders";
 
 export default function Books() {
@@ -53,7 +53,7 @@ export default function Books() {
 
     return (
         <div>
-            <AddBook />
+            <AddBook onBookAdded={(book) => setBooks((prev) => [book, ...prev])} />
             <ul>
                 {books.map(b => (
                     <li key={b._id}>
