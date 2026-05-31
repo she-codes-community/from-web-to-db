@@ -1,0 +1,48 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Book {
+  id     Int     @id @default(autoincrement())
+  title  String
+  author String?
+  year   Int?
+
+  borrows Borrow[]
+}
+
+model User {
+  id       Int     @id @default(autoincrement())
+  email    String  @unique
+  password String
+  isActive Boolean @default(true)
+  role     String  @default("reader")
+
+  borrows Borrow[]
+}
+
+model Event {
+  id        Int      @id @default(autoincrement())
+  topic     String
+  author    String
+  dateTime  DateTime
+  maxGuests Int
+}
+
+model Borrow {
+  id         Int       @id @default(autoincrement())
+  userId     Int
+  bookId     Int
+  borrowedAt DateTime  @default(now())
+  returnedAt DateTime?
+
+  user User @relation(fields: [userId], references: [id])
+  book Book @relation(fields: [bookId], references: [id])
+}
