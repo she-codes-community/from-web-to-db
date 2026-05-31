@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { authHeaders } from "./authHeaders";
 
-export default function AddBook() {
+export default function AddBook({ onBookAdded }) {
     const [title, setTitle] = useState("");
 
     async function addBook(e) {
@@ -14,9 +14,8 @@ export default function AddBook() {
         });
 
         const data = await res.json();
-        // setBooks((prev) => [data, ...prev]);
-        console.log("Book added - reload to view it"); 
         setTitle("");
+        onBookAdded(data);
     }
 
     return (
