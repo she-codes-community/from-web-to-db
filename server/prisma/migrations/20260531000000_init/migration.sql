@@ -4,6 +4,7 @@ CREATE TABLE "Book" (
     "title" TEXT NOT NULL,
     "author" TEXT,
     "year" INTEGER,
+    "rating" INTEGER,
 
     CONSTRAINT "Book_pkey" PRIMARY KEY ("id")
 );
