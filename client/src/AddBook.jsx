@@ -41,6 +41,7 @@ export default function AddBook({ onBookAdded }) {
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="שם הספר"
+                required
             />
             <input
                 value={author}
@@ -53,7 +54,8 @@ export default function AddBook({ onBookAdded }) {
                 onChange={(e) => setYear(e.target.value)}
                 placeholder="שנת פרסום"
             />
-            <button type="submit" disabled={saving}>{saving ? "שומרת..." : "הוסיפי ספר"}</button>
+
+            <button type="submit" disabled={saving}>{saving ? "שומרת..." : "שמרי"}</button>
             {error && <p style={{ color: "red" }}>{error}</p>}
         </form>
     );
