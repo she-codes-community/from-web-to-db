@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import AddBook from "./AddBook";
 import EditBook from "./EditBook";
+import DeleteBook from "./DeleteBook";
 
 export default function Books() {
     const [books, setBooks] = useState([]);
@@ -37,6 +38,10 @@ export default function Books() {
         setEditing(null);
     }
 
+    function handleDelete(deletedId) {
+        setBooks(prev => prev.filter(b => b._id !== deletedId));
+    }
+
     if (loading) return <p>טוען ספרים...</p>;
     if (error) return <p style={{ color: "red" }}>{error}</p>;
 
@@ -48,6 +53,7 @@ export default function Books() {
           <li key={b._id}>
             {b.title} (rating: {b.rating ?? "-"})
             <button onClick={() => setEditing(b)}>ערכי</button>
+            <DeleteBook bookId={b._id} onDeleted={() => handleDelete(b._id)} />
           </li>
         ))}
       </ul>
