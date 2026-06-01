@@ -22,14 +22,16 @@ export default function AddBook({ onBookAdded }) {
             const data = await res.json();
 
             if (!res.ok) {
-                setError(data.error || "הוספת הספר נכשלה");
-                return;
+                throw new Error(data?.error || "הוספת הספר נכשלה");
             }
 
             setTitle("");
             setAuthor("");
             setYear("");
             onBookAdded(data);
+        } catch (err) {
+            console.error(err);
+            setError(err.message);
         } finally {
             setSaving(false);
         }
