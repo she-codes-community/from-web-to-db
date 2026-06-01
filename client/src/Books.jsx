@@ -46,22 +46,21 @@ export default function Books() {
     if (error) return <p style={{ color: "red" }}>{error}</p>;
 
     return (
-    <div>
-      <AddBook onBookAdded={(book) => setBooks((prev) => [book, ...prev])} />
-      <ul>
-        {books.map(b => (
-          <li key={b._id}>
-            {b.title} (rating: {b.rating ?? "-"})
-            <button onClick={() => setEditing(b)}>ערכי</button>
-            <DeleteBook bookId={b._id} onDeleted={() => handleDelete(b._id)} />
-          </li>
-        ))}
-      </ul>
+        <div>
+            <AddBook onBookAdded={(book) => setBooks((prev) => [book, ...prev])} />
+            <ul>
+                {books.map(b => (
+                    <li key={b._id}>
+                        {b.title} – {b.author ?? "-"} ({b.year ?? "-"}) | rating: {b.rating ?? "-"}
+                        <button onClick={() => setEditing(b)}>ערכי</button>
+                        <DeleteBook bookId={b._id} onDeleted={() => handleDelete(b._id)} />
+                    </li>
+                ))}
+            </ul>
 
-      {editing && (
-        <EditBook book={editing} onSave={handleSave} />
-      )}
-    </div>
-  );
+            {editing && (
+                <EditBook book={editing} onSave={handleSave} />
+            )}
+        </div>
+    );
 }
-
