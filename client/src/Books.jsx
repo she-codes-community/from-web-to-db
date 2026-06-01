@@ -33,7 +33,7 @@ export default function Books() {
     return (
         <ul>
             {books.map((b) => (
-                <li key={b.id}>{b.title}</li>
+                <li key={b.id}>{b.title} – {b.author ?? "-"} ({b.year ?? "-"})</li>
             ))}
         </ul>
     );
