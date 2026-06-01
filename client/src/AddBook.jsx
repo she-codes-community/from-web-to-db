@@ -4,21 +4,26 @@ export default function AddBook() {
     const [title, setTitle] = useState("");
     const [author, setAuthor] = useState("");
     const [year, setYear] = useState("");
+    const [saving, setSaving] = useState(false);
 
     async function addBook(e) {
         e.preventDefault();
+        setSaving(true);
+        try {
+            const res = await fetch("http://localhost:3000/api/books", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ title, author, year: year ? Number(year) : undefined }),
+            });
 
-        const res = await fetch("http://localhost:3000/api/books", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ title, author, year: year ? Number(year) : undefined }),
-        });
-
-        const data = await res.json();
-        console.log("Book added - reload to view it");
-        setTitle("");
-        setAuthor("");
-        setYear("");
+            const data = await res.json();
+            console.log("Book added - reload to view it");
+            setTitle("");
+            setAuthor("");
+            setYear("");
+        } finally {
+            setSaving(false);
+        }
     }
 
     return (
@@ -39,7 +44,7 @@ export default function AddBook() {
                 onChange={(e) => setYear(e.target.value)}
                 placeholder="שנת פרסום"
             />
-            <button type="submit">הוסיפי ספר</button>
+            <button type="submit" disabled={saving}>{saving ? "שומרת..." : "הוסיפי ספר"}</button>
         </form>
     );
 }
