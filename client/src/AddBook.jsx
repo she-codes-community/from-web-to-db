@@ -5,29 +5,34 @@ export default function AddBook({ onBookAdded }) {
     const [title, setTitle] = useState("");
     const [author, setAuthor] = useState("");
     const [year, setYear] = useState("");
+    const [saving, setSaving] = useState(false);
     const [error, setError] = useState(null);
 
     async function addBook(e) {
         e.preventDefault();
         setError(null);
+        setSaving(true);
+        try {
+            const res = await fetch("http://localhost:3000/api/books", {
+                method: "POST",
+                headers: { ...authHeaders(), "Content-Type": "application/json" },
+                body: JSON.stringify({ title, author, year: year ? Number(year) : undefined }),
+            });
 
-        const res = await fetch("http://localhost:3000/api/books", {
-            method: "POST",
-            headers: { ...authHeaders(), "Content-Type": "application/json" },
-            body: JSON.stringify({ title, author, year: year ? Number(year) : undefined }),
-        });
+            const data = await res.json();
 
-        const data = await res.json();
+            if (!res.ok) {
+                setError(data.error || "הוספת הספר נכשלה");
+                return;
+            }
 
-        if (!res.ok) {
-            setError(data.error || "הוספת הספר נכשלה");
-            return;
+            setTitle("");
+            setAuthor("");
+            setYear("");
+            onBookAdded(data);
+        } finally {
+            setSaving(false);
         }
-
-        setTitle("");
-        setAuthor("");
-        setYear("");
-        onBookAdded(data);
     }
 
     return (
@@ -48,7 +53,7 @@ export default function AddBook({ onBookAdded }) {
                 onChange={(e) => setYear(e.target.value)}
                 placeholder="שנת פרסום"
             />
-            <button type="submit">הוסיפי ספר</button>
+            <button type="submit" disabled={saving}>{saving ? "שומרת..." : "הוסיפי ספר"}</button>
             {error && <p style={{ color: "red" }}>{error}</p>}
         </form>
     );
