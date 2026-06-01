@@ -10,7 +10,6 @@ const MONGO_URL = process.env.MONGO_URL;
 
 export async function connectDB() {
     try {
-        console.log(MONGO_URL)
         await mongoose.connect(MONGO_URL);
         console.log("Connected to MongoDB");
     } catch (err) {
