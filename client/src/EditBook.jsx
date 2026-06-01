@@ -3,6 +3,8 @@ import { authHeaders } from "./authHeaders";
 
 export default function EditBook({ book, onSave }) {
     const [title, setTitle] = useState(book.title);
+    const [author, setAuthor] = useState(book.author ?? "");
+    const [year, setYear] = useState(book.year ?? "");
     const [rating, setRating] = useState(book.rating ?? 1);
     const [error, setError] = useState("");
 
@@ -10,7 +12,6 @@ export default function EditBook({ book, onSave }) {
         e.preventDefault();
         setError("");
 
-        // ולידציה בסיסית בצד לקוח
         if (!title.trim()) {
             setError("חובה להזין כותרת");
             return;
@@ -19,7 +20,7 @@ export default function EditBook({ book, onSave }) {
         const res = await fetch(`http://localhost:3000/api/books/${book._id}`, {
             method: "PUT",
             headers: { ...authHeaders(), "Content-Type": "application/json" },
-            body: JSON.stringify({ title, rating }),
+            body: JSON.stringify({ title, author, year: year ? Number(year) : null, rating }),
         });
 
         const data = await res.json();
@@ -29,7 +30,7 @@ export default function EditBook({ book, onSave }) {
             return;
         }
 
-        onSave(data); // מעדכן את הרשימה בקומפוננטת האב
+        onSave(data);
     }
 
     return (
@@ -38,6 +39,17 @@ export default function EditBook({ book, onSave }) {
                 value={title}
                 onChange={e => setTitle(e.target.value)}
                 placeholder="שם הספר"
+            />
+            <input
+                value={author}
+                onChange={e => setAuthor(e.target.value)}
+                placeholder="מחברת / מחבר"
+            />
+            <input
+                type="number"
+                value={year}
+                onChange={e => setYear(e.target.value)}
+                placeholder="שנת פרסום"
             />
             <input
                 type="number"
@@ -51,4 +63,3 @@ export default function EditBook({ book, onSave }) {
         </form>
     );
 }
-
