@@ -12,8 +12,12 @@ export default function DeleteBook({ bookId, onDeleted, onError }) {
                 method: "DELETE",
             });
 
+            let data = null;
+            if (res.status !== 204) {
+                data = await res.json().catch(() => null);
+            }
+
             if (!res.ok) {
-                const data = await res.json().catch(() => null);
                 onError?.(data?.error || "מחיקה נכשלה");
                 return;
             }

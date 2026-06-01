@@ -55,7 +55,7 @@ export default function Books() {
             <ul>
                 {books.map(b => (
                     <li key={b._id}>
-                        {b.title} – {b.author ?? "-"} ({b.year ?? "-"}) | rating: {b.rating ?? "-"}
+                        {b.title} – {b.author ?? "-"} ({b.year ?? "-"}){b.rating != null && <> | rating: {b.rating}</>}
                         <button onClick={() => setEditingId(b._id)}>ערכי</button>
                         <DeleteBook bookId={b._id} onDeleted={() => handleDelete(b._id)} onError={setDeleteError} />
                     </li>
