@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { authHeaders } from "./authHeaders";
 
-export default function EditBook({ book, onSave }) {
+export default function EditBook({ book, onSave, onCancel }) {
     const [title, setTitle] = useState(book.title);
     const [author, setAuthor] = useState(book.author ?? "");
     const [year, setYear] = useState(book.year ?? "");
@@ -59,6 +59,7 @@ export default function EditBook({ book, onSave }) {
                 max={5}
             />
             <button type="submit">שמרי שינויים</button>
+            <button type="button" onClick={onCancel}>ביטול</button>
             {error && <p style={{ color: "red" }}>{error}</p>}
         </form>
     );

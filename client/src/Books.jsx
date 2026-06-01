@@ -9,7 +9,8 @@ export default function Books() {
     const [books, setBooks] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [editing, setEditing] = useState(null);
+    const [editingId, setEditingId] = useState(null);
+    const [deleteError, setDeleteError] = useState(null);
 
     const navigate = useNavigate();
 
@@ -41,7 +42,7 @@ export default function Books() {
         setBooks(prev =>
             prev.map(b => (b.id === updatedBook.id ? updatedBook : b))
         );
-        setEditing(null);
+        setEditingId(null);
     }
 
     function handleDelete(deletedId) {
@@ -56,21 +57,24 @@ export default function Books() {
     if (loading) return <p>טוען ספרים...</p>;
     if (error) return <p style={{ color: "red" }}>{error}</p>;
 
+    const editingBook = books.find(b => b.id === editingId) || null;
+
     return (
         <div>
             <AddBook onBookAdded={(book) => setBooks((prev) => [book, ...prev])} />
+            {deleteError && <p style={{ color: "red" }}>{deleteError}</p>}
             <ul>
                 {books.map(b => (
                     <li key={b.id}>
                         {b.title} – {b.author ?? "-"} ({b.year ?? "-"}) | rating: {b.rating ?? "-"}
-                        <button onClick={() => setEditing(b)}>ערכי</button>
-                        <DeleteBook bookId={b.id} onDeleted={() => handleDelete(b.id)} />
+                        <button onClick={() => setEditingId(b.id)}>ערכי</button>
+                        <DeleteBook bookId={b.id} onDeleted={() => handleDelete(b.id)} onError={setDeleteError} />
                     </li>
                 ))}
             </ul>
 
-            {editing && (
-                <EditBook book={editing} onSave={handleSave} />
+            {editingBook && (
+                <EditBook book={editingBook} onSave={handleSave} onCancel={() => setEditingId(null)} />
             )}
 
             <button onClick={handleLogout}>התנתקות</button>
