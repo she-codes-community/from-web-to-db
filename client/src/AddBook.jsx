@@ -3,9 +3,11 @@ import { authHeaders } from "./authHeaders";
 
 export default function AddBook({ onBookAdded }) {
     const [title, setTitle] = useState("");
+    const [error, setError] = useState(null);
 
     async function addBook(e) {
         e.preventDefault();
+        setError(null);
 
         const res = await fetch("http://localhost:3000/api/books", {
             method: "POST",
@@ -14,6 +16,12 @@ export default function AddBook({ onBookAdded }) {
         });
 
         const data = await res.json();
+
+        if (!res.ok) {
+            setError(data.error || "הוספת הספר נכשלה");
+            return;
+        }
+
         setTitle("");
         onBookAdded(data);
     }
@@ -26,6 +34,7 @@ export default function AddBook({ onBookAdded }) {
                 placeholder="שם הספר"
             />
             <button type="submit">הוסיפי ספר</button>
+            {error && <p style={{ color: "red" }}>{error}</p>}
         </form>
     );
 }
