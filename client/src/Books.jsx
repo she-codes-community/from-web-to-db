@@ -38,7 +38,7 @@ export default function Books() {
 
     function handleSave(updatedBook) {
         setBooks(prev =>
-            prev.map(b => (b._id === updatedBook._id ? updatedBook : b))
+            prev.map(b => (b.id === updatedBook.id ? updatedBook : b))
         );
         setEditing(null);
     }
@@ -56,7 +56,7 @@ export default function Books() {
             <AddBook onBookAdded={(book) => setBooks((prev) => [book, ...prev])} />
             <ul>
                 {books.map(b => (
-                    <li key={b._id}>
+                    <li key={b.id}>
                         {b.title} (rating: {b.rating ?? "-"})
                         <button onClick={() => setEditing(b)}>ערכי</button>
                     </li>

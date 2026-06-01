@@ -16,7 +16,7 @@ export default function EditBook({ book, onSave }) {
             return;
         }
 
-        const res = await fetch(`http://localhost:3000/api/books/${book._id}`, {
+        const res = await fetch(`http://localhost:3000/api/books/${book.id}`, {
             method: "PUT",
             headers: { ...authHeaders(), "Content-Type": "application/json" },
             body: JSON.stringify({ title, rating }),

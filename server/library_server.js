@@ -285,6 +285,7 @@ app.get("/api/users/:id/borrows", auth, requireRoles("librarian"), async (req, r
 
         const borrows = await prisma.borrow.findMany({
             where: { userId },
+            orderBy: { borrowedAt: "desc" },
             include: { book: true },
         });
 
