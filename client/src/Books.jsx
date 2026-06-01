@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AddBook from "./AddBook";
 import EditBook from "./EditBook";
+import DeleteBook from "./DeleteBook";
 import { authHeaders } from "./authHeaders";
 
 export default function Books() {
@@ -43,6 +44,10 @@ export default function Books() {
         setEditing(null);
     }
 
+    function handleDelete(deletedId) {
+        setBooks(prev => prev.filter(b => b._id !== deletedId));
+    }
+
     function handleLogout() {
         localStorage.removeItem("token");
         navigate("/login");
@@ -59,6 +64,7 @@ export default function Books() {
                     <li key={b.id}>
                         {b.title} (rating: {b.rating ?? "-"})
                         <button onClick={() => setEditing(b)}>ערכי</button>
+                        <DeleteBook bookId={b._id} onDeleted={() => handleDelete(b._id)} />
                     </li>
                 ))}
             </ul>
