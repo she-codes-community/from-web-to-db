@@ -141,9 +141,9 @@ app.delete("/api/books/:id", auth, requireRoles("librarian"), async (req, res) =
 
 /******************** Auth Routes ********************/
 app.post("/api/users/signup", async (req, res) => {
-    const { email, password } = validateEmailAndPassword(req.body);
-
     try {
+        const { email, password } = validateEmailAndPassword(req.body);
+
         // Prisma -->
         const existing = await prisma.user.findUnique({ where: { email } });
 
