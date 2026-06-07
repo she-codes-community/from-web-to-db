@@ -134,7 +134,7 @@ app.post("/api/users/login", async (req, res) => {
 
         return res.status(200).json({
             token,
-            user: { id: user.id, email: user.email, role: user.role },
+            user: { id: user.id, email: user.email },
         });
     } catch (err) {
         console.error("POST /api/users/login", err);
