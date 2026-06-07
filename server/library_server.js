@@ -50,6 +50,18 @@ app.put("/api/books/:id", async (req, res) => {
     }
 });
 
+app.delete("/api/books/:id", async (req, res) => {
+    const { id } = req.params;
+    try {
+        const deleted = await Book.findByIdAndDelete(id);
+        if (!deleted) { return res.status(404).json({ error: "Book not found" }); }
+        return res.status(200).json({ message: "Deleted", id });
+    } catch (err) {
+        console.error("DELETE /api/books/:id", err);
+        return res.status(500).json({ error: "Failed to delete book" });
+    }
+});
+
 app.listen(3000, () => {
     console.log("Server running on http://localhost:3000");
 });
